@@ -21,6 +21,9 @@ public class SecondWidow extends Activity {
     private static TextView text13;
     private static TextView text14;
     private static TextView text15;
+    private static TextView text16;
+    private static TextView text17;
+    private static TextView text18;
 
     private static Button buttonBack;
 
@@ -47,6 +50,9 @@ public class SecondWidow extends Activity {
         text13 = (TextView) findViewById(R.id.textView13);
         text14 = (TextView) findViewById(R.id.textView14);
         text15 = (TextView) findViewById(R.id.textView15);
+        text16 = (TextView) findViewById(R.id.textView16);
+        text17 = (TextView) findViewById(R.id.textView17);
+        text18 = (TextView) findViewById(R.id.textView18);
 
         //dohvat izračunatih vrijednosti i ispis na drugom window-u
         Intent getData = getIntent();
@@ -56,6 +62,9 @@ public class SecondWidow extends Activity {
         double x4 =  getData.getDoubleExtra("xdata4",0);
         double x5 =  getData.getDoubleExtra("xdata5",0);
         double x6 =  getData.getDoubleExtra("xdata6",0);
+        double x7 =  getData.getDoubleExtra("finalRoll",0);//*57.2958;
+        double x8 =  getData.getDoubleExtra("finalPitch",0);//*57.2958;
+        double x9 =  getData.getDoubleExtra("finalYaw",0);//*57.2958;
 
 
         text10.setText(Double.toString(x1));
@@ -64,6 +73,12 @@ public class SecondWidow extends Activity {
         text13.setText(Double.toString(x4));
         text14.setText(Double.toString(x5));
         text15.setText(Double.toString(x6));
+        text16.setText(Double.toString(x7));
+        text17.setText(Double.toString(x8));
+        text18.setText(Double.toString(x9));
+
+
+
 
 
 
