@@ -58,8 +58,8 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
         GLU.gluPerspective(gl, 45, aspect, 0.1f, 100.f);
 
-        gl.glMatrixMode(GL10.GL_MODELVIEW);  // Select model-view matrix
-        gl.glLoadIdentity();                 // Reset
+        gl.glMatrixMode(GL10.GL_MODELVIEW);
+        gl.glLoadIdentity();
 
 
     }
@@ -71,11 +71,11 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
 
 
-        gl.glLoadIdentity();                 // Reset the mode-view matrix (NEW)
-        gl.glTranslatef(0.0f, 0.0f, z);   // Translate into the screen (NEW)
-        gl.glRotatef(angleX, 1.0f, 0.0f, 0.0f); // Rotate (NEW)
-        gl.glRotatef(angleY, 0.0f, 1.0f, 0.0f); // Rotate (NEW)
-        cube.draw(gl);                      // Draw the cube (NEW)
+        gl.glLoadIdentity();
+        gl.glTranslatef(0.0f, 0.0f, z);
+        gl.glRotatef(angleX, 1.0f, 0.0f, 0.0f);
+        gl.glRotatef(angleY, 0.0f, 1.0f, 0.0f);
+        cube.draw(gl);
 
 
         angleX += speedX;

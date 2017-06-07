@@ -1,8 +1,6 @@
 package com.example.borna2.trlababalan;
 
-/**
- * Created by Nije moj on 21-Dec-16.
- */
+
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.factory.LinearSolverFactory;
 import org.ejml.interfaces.linsol.LinearSolver;
@@ -20,13 +18,13 @@ public class KalmanFilterOperation {
 
    }
 
-    // kinematics description
+
     private DenseMatrix64F F,Q,H;
 
-    // system state estimate
+
     private DenseMatrix64F x,P;
 
-    // these are predeclared for efficiency reasons
+
     private DenseMatrix64F a,b;
     private DenseMatrix64F y,S,S_inv,c,d;
     private DenseMatrix64F K;
@@ -54,7 +52,7 @@ public class KalmanFilterOperation {
         x = new DenseMatrix64F(dimenX,1);
         P = new DenseMatrix64F(dimenX,dimenX);
 
-        // covariance matrices are symmetric positive semi-definite
+
         solver = LinearSolverFactory.symmPosDef(dimenX);
     }
 
@@ -67,11 +65,11 @@ public class KalmanFilterOperation {
 
     public void predict() {
 
-        // x = F x
+
         mult(F,x,a);
         x.set(a);
 
-        // P = F P F' + Q
+
         mult(F,P,b);
         multTransB(b,F, P);
         addEquals(P,Q);
@@ -79,26 +77,26 @@ public class KalmanFilterOperation {
 
 
     public void update(DenseMatrix64F z, DenseMatrix64F R) {
-        // y = z - H x
+
         mult(H,x,y);
         subtract(z, y, y);
 
-        // S = H P H' + R
+
         mult(H,P,c);
         multTransB(c,H,S);
         addEquals(S,R);
 
-        // K = PH'S^(-1)
+
         if( !solver.setA(S) ) throw new RuntimeException("Invert failed");
         solver.invert(S_inv);
         multTransA(H,S_inv,d);
         mult(P,d,K);
 
-        // x = x + Ky
+
         mult(K,y,a);
         addEquals(x,a);
 
-        // P = (I-kH)P = P - (KH)P = P-K(HP)
+
         mult(H,P,c);
         mult(K,c,b);
         subtractEquals(P, b);

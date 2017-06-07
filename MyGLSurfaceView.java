@@ -11,8 +11,16 @@ import android.opengl.GLSurfaceView;
 
 import org.ejml.data.DenseMatrix64F;
 
+import java.util.LinkedList;
+
 
 public class MyGLSurfaceView extends GLSurfaceView implements SensorEventListener {
+
+
+    public static LinkedList<Double> graphDataRollKalman;
+    public static LinkedList<Double> graphDataPitchKalman;
+    public static LinkedList<Double> graphDataYawKalman;
+
     MyGLRenderer renderer;
 
     //definicija varijabli za kalmanov filter
@@ -52,21 +60,25 @@ public class MyGLSurfaceView extends GLSurfaceView implements SensorEventListene
 
 
 
-    // For touch event
-    //private final float TOUCH_SCALE_FACTOR = 180.0f / 320.0f;
-    private float previousX;
-    private float previousY;
+
+    private double previousX;
+    private double previousY;
     Context mContext;
 
-    // Constructor - Allocate and set the renderer
+
     public MyGLSurfaceView(Context context) {
         super(context);
         this.mContext = context;
         renderer = new MyGLRenderer(context);
         this.setRenderer(renderer);
-        // Request focus, otherwise key/button won't react
+
         this.requestFocus();
         this.setFocusableInTouchMode(true);
+
+
+        graphDataRollKalman = new LinkedList<>();
+        graphDataPitchKalman = new LinkedList<>();
+        graphDataYawKalman = new LinkedList<>();
 
         senSensorManager = (SensorManager) mContext.getSystemService(Context.SENSOR_SERVICE);
 
@@ -180,8 +192,9 @@ public class MyGLSurfaceView extends GLSurfaceView implements SensorEventListene
     }
 
     private void invokeKalman() {
+
         //izračun pitch i roll iz akcelerometra
-        double pitch = calcPitch(acc_x,acc_z);
+        double pitch = calcPitch(acc_x,acc_y,acc_z);
         double roll = calcRoll(acc_y,acc_z);
 
 
@@ -216,30 +229,40 @@ public class MyGLSurfaceView extends GLSurfaceView implements SensorEventListene
         final double finalPitch = xdata4;
         final double finalYaw = calcYaw(xdata1,xdata4);;
 
-        //Treba pogledat kaj renderer.angleX prima !!
+
         double currentX = finalRoll;
         double currentY = finalPitch;
         double deltaX, deltaY;
         deltaX = (currentX * 57.2958) - (previousX * 57.2958); //prebacio u stupnjeve
         deltaY = (currentY * 57.2958) - (previousY * 57.2958);
+
         renderer.angleX += deltaX;
         renderer.angleY += deltaY;
+
+        previousX = currentX;
+        previousY = currentY;
+
+        graphDataRollKalman.add(currentX * 57.2958);
+        graphDataPitchKalman.add(currentY * 57.2958);
+        graphDataYawKalman.add(finalYaw * 57.2958);
 
     }
 
     private double calcRoll(double acc_y, double acc_z) {
-        return Math.atan(acc_y/(  (acc_y * acc_y) + (acc_z * acc_z)  ));
+        return Math.atan2(acc_y,acc_z);
+
     }
 
-    private double calcPitch(double acc_x, double acc_z) {
-        return Math.atan(acc_x/(  (acc_x * acc_x) + (acc_z * acc_z)  ));
+    private double calcPitch(double acc_x, double acc_y ,double acc_z) {
+        return Math.atan2((-acc_x),Math.sqrt(acc_y * acc_y + acc_z*acc_z));
+
     }
 
     private double calcYaw(double roll, double pitch) {
         XH = mag_x*Math.cos(pitch) + mag_y* Math.sin(pitch)*Math.sin(roll)
                +mag_z*Math.sin(pitch)*Math.cos(roll);
         YH = mag_y*Math.cos(roll)+ mag_z* Math.sin(roll);
-        double yaw = Math.atan2(-YH,XH);   //nezz jel sam točno stavio u atan2 argumente
+        double yaw = Math.atan2(-YH,XH);
         return yaw ;
     }
 }

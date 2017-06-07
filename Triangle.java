@@ -9,52 +9,50 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import javax.microedition.khronos.opengles.GL10;
 
-/*
- * A triangle with 3 vertices.
- */
+
 public class Triangle {
-    private FloatBuffer vertexBuffer;  // Buffer for vertex-array
-    private FloatBuffer colorBuffer;   // Buffer for color-array (NEW)
-    private ByteBuffer indexBuffer;    // Buffer for index-array
+    private FloatBuffer vertexBuffer;
+    private FloatBuffer colorBuffer;
+    private ByteBuffer indexBuffer;
 
-    private float[] vertices = {  // Vertices of the triangle
-            0.0f,  1.0f, 0.0f, // 0. top
-            -1.0f, -1.0f, 0.0f, // 1. left-bottom
-            1.0f, -1.0f, 0.0f  // 2. right-bottom
+    private float[] vertices = {
+            0.0f,  1.0f, 0.0f,
+            -1.0f, -1.0f, 0.0f,
+            1.0f, -1.0f, 0.0f
     };
-    private byte[] indices = { 0, 1, 2 }; // Indices to above vertices (in CCW)
+    private byte[] indices = { 0, 1, 2 };
 
-    private float[] colors = { // Colors for the vertices (NEW)
-            1.0f, 0.0f, 0.0f, 1.0f, // Red (NEW)
-            0.0f, 1.0f, 0.0f, 1.0f, // Green (NEW)
-            0.0f, 0.0f, 1.0f, 1.0f  // Blue (NEW)
+    private float[] colors = {
+            1.0f, 0.0f, 0.0f, 1.0f,
+            0.0f, 1.0f, 0.0f, 1.0f,
+            0.0f, 0.0f, 1.0f, 1.0f
     };
 
-    // Constructor - Setup the data-array buffers
+
     public Triangle() {
-        // Setup vertex-array buffer. Vertices in float. A float has 4 bytes.
+
         ByteBuffer vbb = ByteBuffer.allocateDirect(vertices.length * 4);
-        vbb.order(ByteOrder.nativeOrder()); // Use native byte order
-        vertexBuffer = vbb.asFloatBuffer(); // Convert byte buffer to float
-        vertexBuffer.put(vertices);         // Copy data into buffer
-        vertexBuffer.position(0);           // Rewind
+        vbb.order(ByteOrder.nativeOrder());
+        vertexBuffer = vbb.asFloatBuffer();
+        vertexBuffer.put(vertices);
+        vertexBuffer.position(0);
 
-        // Setup color-array buffer. Colors in float. A float has 4 bytes (NEW)
+
         ByteBuffer cbb = ByteBuffer.allocateDirect(colors.length * 4);
-        cbb.order(ByteOrder.nativeOrder()); // Use native byte order (NEW)
-        colorBuffer = cbb.asFloatBuffer();  // Convert byte buffer to float (NEW)
-        colorBuffer.put(colors);            // Copy data into buffer (NEW)
-        colorBuffer.position(0);            // Rewind (NEW)
+        cbb.order(ByteOrder.nativeOrder());
+        colorBuffer = cbb.asFloatBuffer();
+        colorBuffer.put(colors);
+        colorBuffer.position(0);
 
-        // Setup index-array buffer. Indices in byte.
+
         indexBuffer = ByteBuffer.allocateDirect(indices.length);
         indexBuffer.put(indices);
         indexBuffer.position(0);
     }
 
-    // Render this shape
+
     public void draw(GL10 gl) {
-        // Enable vertex-array and define the buffers
+
         gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
         gl.glVertexPointer(3, GL10.GL_FLOAT, 0, vertexBuffer);
         gl.glEnableClientState(GL10.GL_COLOR_ARRAY);          // Enable color-array (NEW)
